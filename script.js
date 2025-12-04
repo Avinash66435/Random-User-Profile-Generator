@@ -15,6 +15,14 @@ const errorText = document.getElementById('errorText');
 // API URL
 const API_URL = 'https://randomuser.me/api/';
 
+// Background class constants
+const BASE_BG_CLASSES = 'min-h-screen transition-colors duration-500 bg-gradient-to-br';
+const BG_COLORS = {
+    male: 'from-blue-400 to-blue-600',
+    female: 'from-pink-400 to-pink-600',
+    default: 'from-purple-400 to-purple-600'
+};
+
 // Function to fetch random user data
 async function fetchRandomUser() {
     try {
@@ -27,7 +35,7 @@ async function fetchRandomUser() {
         const response = await fetch(API_URL);
         
         if (!response.ok) {
-            throw new Error('Failed to fetch user data');
+            throw new Error(`Failed to fetch user data (${response.status})`);
         }
 
         const data = await response.json();
@@ -77,16 +85,8 @@ function displayUser(user) {
 
 // Function to change background color based on gender
 function changeBackgroundColor(gender) {
-    if (gender === 'male') {
-        // Blue gradient for male
-        body.className = 'min-h-screen transition-colors duration-500 bg-gradient-to-br from-blue-400 to-blue-600';
-    } else if (gender === 'female') {
-        // Pink gradient for female
-        body.className = 'min-h-screen transition-colors duration-500 bg-gradient-to-br from-pink-400 to-pink-600';
-    } else {
-        // Default gradient
-        body.className = 'min-h-screen transition-colors duration-500 bg-gradient-to-br from-purple-400 to-purple-600';
-    }
+    const colorClasses = BG_COLORS[gender] || BG_COLORS.default;
+    body.className = `${BASE_BG_CLASSES} ${colorClasses}`;
 }
 
 // Function to show error message
@@ -99,7 +99,7 @@ function showError(message) {
 generateBtn.addEventListener('click', fetchRandomUser);
 
 // Set initial background color
-body.className = 'min-h-screen transition-colors duration-500 bg-gradient-to-br from-purple-400 to-purple-600';
+body.className = `${BASE_BG_CLASSES} ${BG_COLORS.default}`;
 
 // Load a random user on page load
 window.addEventListener('DOMContentLoaded', fetchRandomUser);
